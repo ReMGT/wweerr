@@ -1,0 +1,49 @@
+# .github/workflows/root-interactive-linux.yml
+
+name: Interactive Linux Session with Info
+
+on:
+  workflow_dispatch:
+
+jobs:
+  interactive_session:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # НОВЫЙ ШАГ: Установка утилит и вывод информации о системе
+      - name: Install Tools and Show System Info
+        run: |
+          # Обновляем списки пакетов с правами root
+          sudo apt-get update
+          
+          # Устанавливаем neofetch без интерактивных вопросов
+          sudo apt-get install -y neofetch
+          
+          echo "================================================="
+          echo "      SYSTEM INFORMATION (powered by neofetch)   "
+          echo "================================================="
+          # Запускаем neofetch, чтобы показать данные о системе
+          neofetch
+          
+          echo ""
+          echo "================================================="
+          echo "      CHECKING ROOT ACCESS (sudo)                "
+          echo "================================================="
+          # Эта команда докажет, что мы можем выполнять действия от имени root
+          echo "Running 'sudo whoami'..."
+          sudo whoami
+          echo ">>> Root access confirmed! <<<"
+          echo ""
+          echo ">>> TO GET A FULL ROOT SHELL AFTER CONNECTING, TYPE: sudo -i <<<"
+          echo "================================================="
+
+      # Шаг для подключения, как и раньше
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
+        timeout-minutes: 360 # Установил 6 час, можете изменить
+        with:
+          # Используем безопасный вариант (требует наличия SSH-ключа в профиле GitHub)
+          limit-access-to-actor: true
