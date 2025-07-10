@@ -1,0 +1,26 @@
+name: Windows Proxy + Software
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Install Chocolatey (Windows package manager)
+        run: |
+          Set-ExecutionPolicy Bypass -Scope Process -Force
+          [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
+          iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+      - name: Install Firefox
+        run: choco install -y firefox
+      - name: Download 3proxy for Windows
+        run: |
+          Invoke-WebRequest -Uri "https://github.com/z3APA3A/3proxy/releases/download/0.9.4/3proxy-win32-0.9.4.zip" -OutFile "3proxy.zip"
+          Expand-Archive 3proxy.zip -DestinationPath 3proxy
+      - name: Configure and Run 3proxy
+        run: |
+          Set-Content -Path 3proxy\3proxy.cfg -Value "proxy -p3128"
+          Start-Process -FilePath 3proxy\3proxy.exe -ArgumentList "3proxy\3proxy.cfg"
+      - name: Show public IP
+        run: curl ifconfig.me
