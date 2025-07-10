@@ -1,0 +1,22 @@
+# .github/workflows/key-interactive-linux.yml
+
+name: Interactive Linux Session
+
+on:
+  workflow_dispatch:
+
+jobs:
+  interactive_session:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Возвращаем безопасную версию, которая теперь должна работать
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
+        timeout-minutes: 15
+        with:
+          # Эта строка теперь должна работать, так как ключ в профиле исправлен
+          limit-access-to-actor: true
