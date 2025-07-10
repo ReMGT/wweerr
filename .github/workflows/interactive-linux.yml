@@ -1,0 +1,28 @@
+# .github/workflows/interactive-linux.yml
+
+name: Interactive Linux Session
+
+# Этот раздел позволяет запускать воркфлоу вручную из вкладки Actions в GitHub
+on:
+  workflow_dispatch:
+
+jobs:
+  # Название задачи
+  interactive_session:
+    # Запускаем на последней версии Ubuntu, предоставляемой GitHub
+    runs-on: ubuntu-latest
+
+    steps:
+      # Шаг 1: Стандартное действие для доступа к коду вашего репозитория (не обязательно, но полезно)
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Шаг 2: Установка и запуск tmate для создания интерактивной сессии
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
+        timeout-minutes: 15 # Сессия автоматически закроется через 15 минут
+        with:
+          # Вы можете добавить сюда команды, которые должны выполниться при старте
+          # Например, установка программ:
+          # install: sudo apt-get update && sudo apt-get install -y neofetch htop
+          limit-access-to-actor: true # Только вы (запустивший воркфлоу) сможете подключиться
