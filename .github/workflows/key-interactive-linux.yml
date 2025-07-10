@@ -16,7 +16,7 @@ jobs:
       # Возвращаем безопасную версию, которая теперь должна работать
       - name: Setup tmate session
         uses: mxschmitt/action-tmate@v3
-        timeout-minutes: 15
+        timeout-minutes: 30
         with:
           # Эта строка теперь должна работать, так как ключ в профиле исправлен
           limit-access-to-actor: true
